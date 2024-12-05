@@ -1,66 +1,29 @@
-import java.util.Random;
-import java.util.concurrent.Semaphore;
 public class Consumatore extends Thread{
-    private int[]prodotti;
-    private String nome;
-    private Semaphore vuoto;
-    private Semaphore pieno;
-    private int sottrai;
-    public Consumatore(int[]prodotti,String nome,Semaphore vuoto,Semaphore pieno){
-        this.prodotti=prodotti;
-        this.nome=nome;
-        this.vuoto=vuoto;
-        this.pieno=pieno;
-        sottrai=0;
-    }
-    public void setProdotti(int[]prodotti){
-        this.prodotti=prodotti;
-    }
-    public int[]getProdotti(){
-        return prodotti;
-    }
-    public void setNome(String nome){
+    private final String nome;
+    public Consumatore(String nome) {
         this.nome=nome;
     }
-    public String getNome(){
-        return nome;
-    }
-    public void setVuoto(Semaphore vuoto){
-        this.vuoto=vuoto;
-    }
-    public Semaphore getVuoto(){
-        return vuoto;
-    }
-    public void setPieno(Semaphore pieno){
-        this.pieno=pieno;
-    }
-    public Semaphore getPieno(){
-        return pieno;
-    }
-    public void setSottrai(int sottrai){
-        this.sottrai=sottrai;
-    }
-    public int getSottrai(){
-        return sottrai;
-    }
-    public void consuma(){
-        try {
-            pieno.acquire();
-            System.out.println("Thread "+nome+" ha consumato "+prodotti[sottrai]);
-            sottrai=(sottrai+1)%prodotti.length;
-            vuoto.release();
-        }catch (Exception e){
-            System.out.println("Thread "+nome+" errore nella produzione "+e);
+    public void consuma() {
+        synchronized (Produttore.prodotti){
+            while (Produttore.sottrai ==Produttore.aggiungi){
+                try {
+                    Produttore.prodotti.wait();
+                } catch (Exception e) {
+                    System.out.println("Thread "+nome+" interrotto"+e);
+                }
+            }
+            System.out.println("Thread "+nome+" ha consumato "+Produttore.prodotti[Produttore.sottrai]);
+            Produttore.sottrai=(Produttore.sottrai + 1)%Produttore.prodotti.length;
+            Produttore.prodotti.notifyAll();
         }
     }
     public void run(){
-        Random random=new Random();
         while (true){
-            try {
+            try{
                 Thread.sleep(1500);
                 consuma();
             }catch (Exception e){
-                System.out.println("Thread "+nome+" errore nel run "+e);
+                System.out.println("Thread "+nome+" interrotto " + e);
             }
         }
     }
