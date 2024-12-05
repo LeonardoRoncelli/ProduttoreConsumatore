@@ -5,13 +5,13 @@ public class Produttore extends Thread{
     private String nome;
     private Semaphore vuoto;
     private Semaphore pieno;
-    private int posiziona;
+    private int aggiungi;
     public Produttore(int[]prodotti,String nome,Semaphore vuoto,Semaphore pieno){
         this.prodotti=prodotti;
         this.nome=nome;
         this.vuoto=vuoto;
         this.pieno=pieno;
-        posiziona=0;
+        aggiungi=0;
     }
     public void setProdotti(int[]prodotti){
         this.prodotti=prodotti;
@@ -37,17 +37,17 @@ public class Produttore extends Thread{
     public Semaphore getPieno(){
         return pieno;
     }
-    public void setPosiziona(int posiziona){
-        this.posiziona=posiziona;
+    public void setAggiungi(int aggiungi){
+        this.aggiungi=aggiungi;
     }
-    public int getPosiziona(){
-        return posiziona;
+    public int getAggiungi(){
+        return aggiungi;
     }
     public void produce(int p){
         try{
             vuoto.acquire();
-            prodotti[posiziona]=p;
-            posiziona=(posiziona+1)%prodotti.length;
+            prodotti[aggiungi]=p;
+            aggiungi=(aggiungi+1)%prodotti.length;
             System.out.println("Thread "+nome+" ha prodotto "+p);
             pieno.release();
         }catch (Exception e){
