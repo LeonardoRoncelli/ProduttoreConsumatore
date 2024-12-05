@@ -54,4 +54,15 @@ public class Produttore extends Thread{
             System.out.println("Thread "+nome+" errore nella produzione di: "+e);
         }
     }
+    public void run(){
+        Random random=new Random();
+        while(true){
+            try{
+                produce(random.nextInt(101));
+                Thread.sleep(1000);
+            }catch (Exception e){
+                System.out.println("Thread "+nome+" errore nel run: "+e);
+            }
+        }
+    }
 }
