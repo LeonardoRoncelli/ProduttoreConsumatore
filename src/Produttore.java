@@ -59,7 +59,7 @@ public class Produttore extends Thread{
         while(true){
             try{
                 produce(random.nextInt(101));
-                Thread.sleep(1000);
+                Thread.sleep(1500);
             }catch (Exception e){
                 System.out.println("Thread "+nome+" errore nel run: "+e);
             }

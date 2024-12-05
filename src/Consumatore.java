@@ -53,4 +53,15 @@ public class Consumatore extends Thread{
             System.out.println("Thread "+nome+" errore nella produzione "+e);
         }
     }
+    public void run(){
+        Random random=new Random();
+        while (true){
+            try {
+                Thread.sleep(1500);
+                consuma();
+            }catch (Exception e){
+                System.out.println("Thread "+nome+" errore nel run "+e);
+            }
+        }
+    }
 }
