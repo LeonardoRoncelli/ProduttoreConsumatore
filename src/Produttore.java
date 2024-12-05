@@ -43,4 +43,15 @@ public class Produttore extends Thread{
     public int getPosiziona(){
         return posiziona;
     }
+    public void produce(int p){
+        try{
+            vuoto.acquire();
+            prodotti[posiziona]=p;
+            posiziona=(posiziona+1)%prodotti.length;
+            System.out.println("Thread "+nome+" ha prodotto "+p);
+            pieno.release();
+        }catch (Exception e){
+            System.out.println("Thread "+nome+" errore nella produzione di: "+e);
+        }
+    }
 }
