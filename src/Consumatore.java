@@ -43,4 +43,14 @@ public class Consumatore extends Thread{
     public int getSottrai(){
         return sottrai;
     }
+    public void consuma(){
+        try {
+            pieno.acquire();
+            System.out.println("Thread "+nome+" ha consumato "+prodotti[sottrai]);
+            sottrai=(sottrai+1)%prodotti.length;
+            vuoto.release();
+        }catch (Exception e){
+            System.out.println("Thread "+nome+" errore nella produzione "+e);
+        }
+    }
 }
